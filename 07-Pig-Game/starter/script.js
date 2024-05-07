@@ -11,27 +11,24 @@ const newButton = document.querySelector('.btn--new');
 const playerEl1 = document.querySelector('.player--0');
 const playerEl2 = document.querySelector('.player--1');
 
-let scores = [0, 0];
-let activePlayer = 0;
-let playing = true;
+let scores, activePlayer, playing, currentScore;
 
 const startCondition = () => {
   scores = [0, 0];
-  scoreEl0.textContent = scores[0];
-  scoreEl1.textContent = scores[1];
+  activePlayer = 0;
+  playing = true;
+  currentScore = 0;
+  scoreEl0.textContent = 0;
+  scoreEl1.textContent = 0;
   currentEl0.textContent = 0;
   currentEl1.textContent = 0;
   diceEl.classList.add('hidden');
-  activePlayer = 0;
-  playing = true;
   playerEl1.classList.add('player--active');
   playerEl2.classList.remove('player--active');
   playerEl1.classList.remove('player--winner');
   playerEl2.classList.remove('player--winner');
 };
 startCondition();
-
-let currentScore = 0;
 
 const switchPlayer = () => {
   document.querySelector(`#current--${activePlayer}`).textContent = 0;
@@ -40,7 +37,8 @@ const switchPlayer = () => {
   playerEl1.classList.toggle('player--active');
   playerEl2.classList.toggle('player--active');
 };
-diceButton.addEventListener('click', () => {
+
+const diceButtonAction = () => {
   if (playing) {
     const rollDice = Math.trunc(Math.random() * 6 + 1);
     diceEl.classList.remove('hidden');
@@ -53,14 +51,14 @@ diceButton.addEventListener('click', () => {
       switchPlayer();
     }
   }
-});
+};
 
-holdButton.addEventListener('click', () => {
+const holdButtonAction = () => {
   if (playing) {
     scores[activePlayer] += Number(currentScore);
     document.querySelector(`#score--${activePlayer}`).textContent =
       scores[activePlayer];
-    if (scores[activePlayer] >= 10) {
+    if (scores[activePlayer] >= 100) {
       playing = false;
       document
         .querySelector(`.player--${activePlayer}`)
@@ -73,6 +71,10 @@ holdButton.addEventListener('click', () => {
       switchPlayer();
     }
   }
-});
+};
+
+diceButton.addEventListener('click', diceButtonAction);
+
+holdButton.addEventListener('click', holdButtonAction);
 
 newButton.addEventListener('click', startCondition);
