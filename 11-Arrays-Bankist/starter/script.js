@@ -74,3 +74,82 @@ const currencies = new Map([
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
+//// Array Methods
+// $ Slice - Does not mutate the original array
+let arr = ['a', 'b', 'c', 'd', 'e'];
+console.log('arr = ', arr);
+console.log('Slice Method (from Index 2 of arr): ', arr.slice(2));
+console.log('Slice Method (from Index 2 to index 4 of arr): ', arr.slice(2, 4));
+console.log('Slice Method (from Index -1 of arr): ', arr.slice(-1));
+// * Creating a shallow copy
+console.log('Creating a shallow copy using slice: ', arr.slice());
+// * Another method to create a shallow copy
+console.log('Shallow copy using spread operator: ', [...arr]);
+
+// $ Splice - Mutates the original array
+console.log('Splice Method (at Index 2 of arr): ', arr.splice(2));
+arr = ['a', 'b', 'c', 'd', 'e'];
+console.log('Splice Method (at Index -1 of arr): ', arr.splice(-1));
+arr = ['a', 'b', 'c', 'd', 'e'];
+console.log(
+  'Splice Method (at Index -3 and 2 counts of arr): ',
+  arr.splice(-3, 2)
+); // Second parameter is how many elements we want to delete
+
+// $ Reverse - Mutates the original array
+arr = ['a', 'b', 'c', 'd', 'e'];
+const arr2 = ['j', 'i', 'h', 'g', 'f'];
+console.log('Reverse Method: ', arr2.reverse());
+console.log('Mutated array using reverse method: ', arr2);
+
+// $ Concat Method - Does not mutate the original array
+const letters = arr.concat(arr2);
+console.log('Concat Method: ', letters);
+
+//$ Join Method
+console.log('Join Method: ', letters.join(' - '));
+
+// $ At Method
+const arr3 = [8, 16, 24, 36];
+console.log(arr3[0]);
+console.log(arr3.at(0));
+console.log(arr3.at(-1));
+console.log('At method can be used in strings as well: ', 'Vinoth'.at(0));
+
+for (const [index, movement] of movements.entries()) {
+  if (movement > 0) {
+    console.log(`${index + 1}: You deposited ${movement} $`);
+  } else {
+    console.log(`${index + 1}: You Withdrew ${Math.abs(movement)} $`);
+  }
+}
+
+console.log('/////////   Using forEach Method   //////////');
+movements.forEach((movement, index) => {
+  if (movement > 0) {
+    console.log(`${index + 1}: You deposited ${movement} $`);
+  } else {
+    console.log(`${index + 1}: You Withdrew ${Math.abs(movement)} $`);
+  }
+});
+
+//// forEach Method on maps and sets
+// $ On Map
+currencies.forEach((value, key) => {
+  console.log(`${key}: ${value}`);
+});
+
+// $ On Sets
+
+const currenciesUnique = new Set(['INR', 'USD', 'INR', 'EUR', 'GBP', 'EUR']);
+console.log(currenciesUnique);
+currenciesUnique.forEach((value, value2) => {
+  console.log(`${value}: ${value2}`);
+});
+// * forEach in set uses the same parameter twice as value and value 2 we can simply ignore it.
+currenciesUnique.forEach(value => console.log(`${value}`));
+
+// * If you want the third parameter set which is the object set, simply use _ as a placeholder for second parameter
+currenciesUnique.forEach((value, _, set) => {
+  console.log(`${value}: ${set}`);
+});
