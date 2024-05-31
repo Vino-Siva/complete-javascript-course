@@ -153,3 +153,22 @@ currenciesUnique.forEach(value => console.log(`${value}`));
 currenciesUnique.forEach((value, _, set) => {
   console.log(`${value}: ${set}`);
 });
+const eurToUsd = 1.1;
+const movementsUSD = movements.map(mov => mov * eurToUsd);
+const movementsDescription = movements.map(
+  (mov, i) =>
+    `Movement ${i + 1}: You ${mov > 0 ? 'deposited' : 'withdrew'} ${Math.abs(
+      mov
+    )}`
+);
+console.log(movementsUSD, movementsDescription);
+
+const deposits = movements.filter(mov => mov > 0);
+const withdrawals = movements.filter(mov => mov < 0);
+console.log(deposits);
+console.log(withdrawals);
+const balance = movements.reduce(
+  (preValue, curValue) => preValue + curValue,
+  0
+);
+console.log(balance);

@@ -59,6 +59,24 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+// $ Creating UserNames
+const generateUsername = accs => {
+  accs.forEach(acc => {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(' ')
+      .map(name => name.slice(0, 3))
+      .join('');
+  });
+};
+generateUsername(accounts);
+
+accounts.forEach(acc => {
+  console.log(
+    `Username: ${acc.username}\npassword: ${acc.pin}\n_______________`
+  );
+});
+
 // $ Displaying transactions
 const displayTransactions = movements => {
   containerMovements.innerHTML = '';
@@ -69,10 +87,80 @@ const displayTransactions = movements => {
       <div class="movements__type movements__type--${transType}">${
       i + 1
     } ${transType}</div>
-      <div class="movements__value">${transValue}</div>
+      <div class="movements__value">${transValue} €</div>
     </div>
     `;
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
-displayTransactions(account1.movements);
+
+// $ Displaying Balance using reduce method
+const displayCalcBalance = acc => {
+  acc.balance = acc.movements.reduce(
+    (accValue, currValue) => accValue + currValue,
+    0
+  );
+  labelBalance.textContent = `${acc.balance} €`;
+};
+
+// $ Displaying in/out and interest using filter & reduce methods
+const displayCalcSummary = acc => {
+  const inwardTrans = acc.movements
+    .filter(trans => trans > 0)
+    .reduce((accValue, transValue) => accValue + transValue, 0);
+  labelSumIn.textContent = `${inwardTrans} €`;
+  const outwardTrans = acc.movements
+    .filter(trans => trans < 0)
+    .reduce((accValue, transValue) => accValue + transValue, 0);
+  labelSumOut.textContent = `${Math.abs(outwardTrans)} €`;
+  const interest = acc.movements
+    .filter(trans => trans > 0)
+    .map(deposit => (deposit * acc.interestRate) / 100)
+    .filter(int => int >= 1)
+    .reduce((accValue, transValue) => accValue + transValue, 0);
+  labelSumInterest.textContent = `${interest} €`;
+};
+
+const updateUI = acc => {
+  displayTransactions(acc.movements);
+  displayCalcBalance(acc);
+  displayCalcSummary(acc);
+};
+
+// $ implementing login feature using event handlers
+let currentUser;
+const loginEvent = e => {
+  e.preventDefault();
+  currentUser = accounts.find(acc => acc.username === inputLoginUsername.value);
+  if (currentUser?.pin === Number(inputLoginPin.value)) {
+    labelWelcome.textContent = `Welcome back, ${
+      currentUser.owner.split(' ')[0]
+    }`;
+    containerApp.style.opacity = 100; // * Displaying dashboard
+    inputLoginUsername.value = inputLoginPin.value = ''; // * Clearing input fields after login. Need an update.
+    inputLoginPin.blur();
+    updateUI(currentUser);
+  }
+};
+btnLogin.addEventListener('click', loginEvent);
+
+// $ Implementing transfer feature
+const transferEvent = e => {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
+  inputTransferAmount.value = inputTransferTo.value = '';
+  if (
+    amount > 0 &&
+    receiverAcc &&
+    currentUser.balance >= amount &&
+    receiverAcc?.movements !== currentUser.username
+  ) {
+    currentUser.movements.push(-amount);
+    receiverAcc.movements.push(amount);
+    updateUI(currentUser);
+  }
+};
+btnTransfer.addEventListener('click', transferEvent);
