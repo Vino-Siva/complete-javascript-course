@@ -172,3 +172,26 @@ const balance = movements.reduce(
   0
 );
 console.log(balance);
+
+// $ Creating arrays
+const arr1 = [1, 2, 3, 4, 5, 6, 7]; //* Manual method
+const constructArray = new Array(1, 2, 3, 4, 5, 6, 7); //* Using Array constructor
+const constructEmptyArr = new Array(7); //* Constructs an empty array with a length of 7
+console.log(constructEmptyArr);
+constructEmptyArr.fill(1); //* Fills or replaces all elements of this array with a value of 1
+console.log(constructEmptyArr);
+constructEmptyArr.fill(2, 1, 4); //* fills or replaces elements from index 1 to 4 (excluded) with value of 2
+console.log(arr, constructArray, constructEmptyArr);
+const x = Array.from({ length: 7 }, () => 1); // * Creating an array of length 7 with value of 1. This method is dynamic as we can specify the array using a map function
+const y = Array.from({ length: 7 }, (_, i) => i + 1);
+console.log(x, y);
+
+labelBalance.addEventListener('click', () => {
+  const transactionsUI = Array.from(
+    document.querySelectorAll('.movements__value'),
+    elem => Number(elem.textContent.replace('€', '').replace(' ', ''))
+  );
+  console.log(transactionsUI);
+  const transactionsUI2 = [...document.querySelectorAll('.movements__value')];
+  console.log(transactionsUI2);
+});

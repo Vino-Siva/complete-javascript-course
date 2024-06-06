@@ -78,9 +78,12 @@ accounts.forEach(acc => {
 });
 
 // $ Displaying transactions
-const displayTransactions = movements => {
+const displayTransactions = (movements, sort = false) => {
   containerMovements.innerHTML = '';
-  movements.forEach(function (transValue, i) {
+  const transactions = sort
+    ? movements.slice().sort((a, b) => a - b)
+    : movements;
+  transactions.forEach(function (transValue, i) {
     const transType = transValue > 0 ? 'deposit' : 'withdrawal';
     const html = `
     <div class="movements__row">
@@ -93,6 +96,15 @@ const displayTransactions = movements => {
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
+
+// $ Sorting Account transactions
+let sorted = false;
+const sortTransactions = e => {
+  e.preventDefault();
+  displayTransactions(currentUser.movements, !sorted);
+  sorted = !sorted;
+};
+btnSort.addEventListener('click', sortTransactions);
 
 // $ Displaying Balance using reduce method
 const displayCalcBalance = acc => {
@@ -164,3 +176,36 @@ const transferEvent = e => {
   }
 };
 btnTransfer.addEventListener('click', transferEvent);
+
+// $ Ability to close account
+const closeAccount = e => {
+  e.preventDefault();
+  if (
+    inputCloseUsername.value === currentUser.username &&
+    Number(inputClosePin.value) === currentUser.pin
+  ) {
+    accounts.splice(
+      accounts.findIndex(acc => acc.username === currentUser.username),
+      1
+    );
+    containerApp.style.opacity = 0;
+  }
+  inputCloseUsername.value = inputClosePin.value = '';
+};
+btnClose.addEventListener('click', closeAccount);
+
+// $ Availing loan
+// ! Needs future update
+const getLoan = e => {
+  e.preventDefault();
+  const requestAmount = Number(inputLoanAmount.value);
+  if (
+    requestAmount > 0 &&
+    currentUser.movements.some(trans => trans >= requestAmount * 0.1)
+  ) {
+    currentUser.movements.push(requestAmount);
+    updateUI();
+  }
+  inputLoanAmount.value = '';
+};
+btnLoan.addEventListener('click', getLoan);
