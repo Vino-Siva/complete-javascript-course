@@ -74,3 +74,34 @@ console.log(tesla instanceof EV);
 console.log(tesla instanceof Car);
 console.log(tesla instanceof Object);
 console.dir(EV.prototype.constructor);
+
+class EVCl extends CarCl {
+  #charge;
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+  }
+  chargeBattery(chargeTo) {
+    this.#charge = chargeTo;
+    return this;
+  }
+  accelerate() {
+    this.speed += 20;
+    this.#charge--;
+    console.log(
+      `${this.make} going at ${this.speed} km/h, with a charge of ${
+        this.#charge
+      }%`
+    );
+    return this;
+  }
+  brake() {
+    this.speed -= 5;
+    console.log(`${this.speed} km/h`);
+    return this;
+  }
+}
+
+const rivian = new EVCl('Rivian', 120, 23);
+rivian.accelerate().accelerate().brake().chargeBattery(50).accelerate().brake();
+// console.log(this.#charge);

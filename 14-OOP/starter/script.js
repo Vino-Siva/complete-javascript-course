@@ -15,7 +15,7 @@ console.log(vinoth);
 console.log(vinoth instanceof Person);
 
 Person.prototype.calcAge = function () {
-  console.log(2024 - this.birthYear);
+  console.log(new Date().getFullYear() - this.birthYear);
 };
 console.log(Person.prototype);
 console.log(vinoth.__proto__ === Person.prototype);
@@ -51,13 +51,13 @@ class PersonCl {
   // $ Methods needs to be added outside the constructor function, to avoid repetition on its instances.
   // $ Methods created outside will be added to .prototype property. These are called Instance Methods.
   calcAge() {
-    console.log(2024 - this.birthYear);
+    console.log(new Date().getFullYear() - this.birthYear);
   }
   greet() {
     console.log(`Hey, ${this.fullName}`);
   }
   get age() {
-    return 2024 - this.birthYear;
+    return new Date().getFullYear() - this.birthYear;
   }
   // * Set a property that already exists
   set fullName(name) {
@@ -85,7 +85,7 @@ rudra.fullName;
 ///// Using Object.create
 const PersonProto = {
   calcAge() {
-    console.log(2024 - this.birthYear);
+    console.log(new Date().getFullYear() - this.birthYear);
   },
   init(fullName, birthYear) {
     this.fullName = fullName;
@@ -97,6 +97,7 @@ buvi.init('Buvi Vinoth', 1996);
 buvi.calcAge();
 console.log(buvi);
 
+// // Inheritance between classes using constructor functions
 const Student = function (firstName, birthYear, course) {
   Person.call(this, firstName, birthYear);
   this.course = course;
@@ -119,3 +120,117 @@ console.log(vinodh instanceof Object);
 
 Student.prototype.constructor = Student;
 console.dir(Student.prototype.constructor);
+
+// // Inheritance between classes using ES6 classes
+class StudentCl extends PersonCl {
+  constructor(fullName, birthYear, course) {
+    // $ super() must always happen first. It sets the this keyword to the Object returned from this constructor
+    super(fullName, birthYear);
+    this.course = course;
+  }
+  introduce() {
+    console.log(
+      ` Hello, my name is ${this.fullName} and I study ${this.course}`
+    );
+  }
+  calcAge() {
+    console.log(
+      `I'm a ${new Date().getFullYear() - this.birthYear} years old student.`
+    );
+  }
+}
+const meenu = new StudentCl('Bhuvi Vinoth', 1996, 'Computer Science');
+meenu.introduce();
+meenu.calcAge();
+
+// // Inheritance between classes using Object.create()
+// ! Need to go through this lecture
+
+//// More class examples
+
+// $ Public Fields
+// $ Private Fields
+// $ Public Methods
+// $ Private Methods
+// $ There is also a static method
+
+class Account {
+  // * Public fields needs to be declared over here before constructor
+  // * Public fields (instances)
+  locale = navigator.language;
+
+  // * Private Fields
+  #movements = [];
+  #pin;
+
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    // this._pin = pin;
+    this.#pin = pin;
+    // this._movements = []; // ? Protected Property with _ in front.
+    // this.locale = navigator.language; // $ It's not necessary to specify the parameters.
+    console.log(`Thanks for opening an account with us, ${this.owner}`);
+  }
+
+  // $ Public Interface
+  deposit(amount) {
+    // this._movements.push(amount);
+    this.#movements.push(amount);
+    return this;
+  }
+  withdraw(amount) {
+    this.deposit(-amount);
+    return this;
+  }
+
+  // _approveLoan(amount) {
+  #approveLoan(amount) {
+    return amount <= 5000 ? true : false;
+  }
+
+  static helper() {
+    console.log(' Helper function');
+  }
+
+  requestLoan(amount) {
+    // this._approveLoan(amount)
+    if (this.#approveLoan(amount)) {
+      console.log(
+        `Thank you for banking with us ${this.owner}. Your loan request for the amount of US $ ${amount} is approved by the bank. It should be reflected in your bank account soon.`
+      );
+      this.deposit(amount);
+      return this;
+    } else {
+      console.log(
+        `Your loan request for the amount of US $ ${amount} is rejected by the bank. Please contact our nearest branch for more details. We apologize for the inconvenience.`
+      );
+      return this;
+    }
+  }
+  getMovements() {
+    // return this._movements;
+    return this.#movements;
+  }
+}
+
+const acc1 = new Account('John', 'USD', 1111);
+acc1.deposit(500);
+acc1.withdraw(50);
+acc1.requestLoan(5000);
+acc1.requestLoan(6000);
+console.log(acc1.getMovements());
+// console.log(acc1.#movements)   //// Not accessible outside class
+console.log(acc1);
+
+//// Chaining Methods
+console.log(
+  acc1
+    .deposit(300)
+    .deposit(500)
+    .deposit(1300)
+    .withdraw(200)
+    .withdraw(150)
+    .deposit(2500)
+    .getMovements()
+);
