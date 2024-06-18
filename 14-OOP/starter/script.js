@@ -144,7 +144,19 @@ meenu.introduce();
 meenu.calcAge();
 
 // // Inheritance between classes using Object.create()
-// ! Need to go through this lecture
+const StudentProto = Object.create(PersonProto);
+StudentProto.init = function (fullName, birthYear, course) {
+  PersonProto.init.call(this, fullName, birthYear);
+  this.course = course;
+};
+const siva = Object.create(StudentProto);
+siva.introduce = function () {
+  console.log(` Hello, my name is ${this.fullName} and I study ${this.course}`);
+};
+siva.init('Siva Vinodh', 1988, 'JavaScript');
+siva.introduce();
+siva.calcAge();
+console.log(siva);
 
 //// More class examples
 
