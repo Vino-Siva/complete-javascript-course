@@ -38,9 +38,9 @@ const countriesContainer = document.querySelector('.countries');
 
 const renderCountry = function (data, className = '') {
   const [currencyObj] = Object.values(data.currencies);
-  const currency = Object.values(currencyObj).join(' ');
-  const [language] = Object.values(data.languages);
-  // console.log(language);
+  const currency = Object.values(currencyObj).join(', ');
+  const languages = Object.values(data.languages).join(', ');
+  // console.log(languages);
   // console.log(currency);
   const html = `
       <article class="country ${className}">
@@ -51,7 +51,7 @@ const renderCountry = function (data, className = '') {
           <p class="country__row"><span>👫</span>${(
             +data.population / 1000000
           ).toFixed(1)} million people</p>
-          <p class="country__row"><span>🗣️</span>${language}</p>
+          <p class="country__row"><span>🗣️</span>${languages}</p>
           <p class="country__row"><span>💰</span>${currency}</p>
         </div>
       </article>
