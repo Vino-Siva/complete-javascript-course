@@ -1,0 +1,19 @@
+{
+  "name": "modern-js-modules-tooling",
+  "version": "0.0.1",
+  "main": "script.js",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "Vinoth",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "leaflet": "^1.9.4",
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "parcel": "^2.12.0"
+  }
+}

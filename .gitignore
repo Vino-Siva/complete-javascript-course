@@ -1,4 +1,7 @@
 .vscode
 .DS_Store
+.parcel-cache
+dist
 course-material-v2.2
+node_modules
 *.pdf
